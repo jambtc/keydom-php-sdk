@@ -1,6 +1,6 @@
 {
-    "name": "jambtc/faac-php-sdk",
-    "description": "SDK PHP per Faac",
+    "name": "jambtc/keydom-php-sdk",
+    "description": "SDK PHP per Keydom",
     "type": "library",
     "require": {
         "php": ">=8.0",
@@ -9,12 +9,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Faac\\": "src/"
+            "Keydom\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Faac\\Tests\\": "tests/"
+            "Keydom\\Tests\\": "tests/"
         }
     },
     "minimum-stability": "dev",

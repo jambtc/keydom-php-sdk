@@ -1,6 +1,6 @@
 <?php
 
-namespace Faac\Auth;
+namespace Keydom\Auth;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
@@ -13,25 +13,24 @@ class AuthService
 
     public function __construct(string $baseUrl)
     {
-        $this->client = new Client();
+        $this->client = new Client(['verify' => false]);
         $this->baseUrl = rtrim($baseUrl, '/');
     }
 
     public function authenticate(string $username, string $password): ?string
     {
         try {
-            $response = $this->client->post($this->baseUrl . '/keydom/api-external/authentication', [
+            $response = $this->client->post($this->baseUrl . '/authentication/login', [
                 'json' => [
                     'username' => $username,
-                    'passwordHash' => uppercase(md5($password))
+                    'passwordHash' => strtoupper(md5($password))
                 ]
             ]);
-            $data = json_decode($response->getBody()->getContents(), true);
-            $this->token = $data['data']['token'] ?? null;
+            $object = json_decode($response->getBody()->getContents(), false);
 
-            return $this->token;
+            return $this->token = $object->data->token ?? null;
         } catch (RequestException $e) {
-            // Gestire l'eccezione
+            // echo $e->getMessage(); exit;
             return null;
         }
     }

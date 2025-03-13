@@ -1,6 +1,6 @@
 <?php
 
-namespace Faac\Http;
+namespace Keydom\Http;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\RequestException;

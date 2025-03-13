@@ -1,6 +1,6 @@
 <?php
 
-namespace Faac\Http;
+namespace Keydom\Http;
 
 use Psr\Http\Message\ResponseInterface;
 
@@ -27,7 +27,7 @@ class Response
 
     public function getJson(): ?array
     {
-        return $this->response ? json_decode($this->getBody(), true) : null;
+        return $this->response ? json_decode($this->getBody(), false) : null;
     }
 
     public function getError(): ?string
