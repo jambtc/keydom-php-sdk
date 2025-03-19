@@ -3,7 +3,6 @@
 namespace Keydom\Controllers;
 
 use Keydom\Auth\AuthService;
-use Keydom\Http\Client;
 
 /**
  * AccessController class
@@ -13,7 +12,6 @@ use Keydom\Http\Client;
 class AccessController
 {
     private AuthService $authService;
-    private Client $client;
 
     /**
      * Constructor method
@@ -25,7 +23,6 @@ class AccessController
     public function __construct(AuthService $authService)
     {
         $this->authService = $authService;
-        $this->client = new Client();
     }
 
 
@@ -39,11 +36,9 @@ class AccessController
      */
     public function getByKey(string $uuid): ?object
     {
-        // Makes an HTTP GET request to fetch user information.
-        $response = $this->client->request(
-            $this->authService->getBaseUrl(),
-            'GET',
-            '/accessMedias/getByKey/?uuid=' . $uuid,
+
+        $response = $this->authService->getClient()->get(
+            $this->authService->getBaseUrl() . '/accessMedias/getByKey/update',  // URI relativo
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -52,8 +47,10 @@ class AccessController
             ]
         );
 
+        $object = json_decode($response->getBody()->getContents(), false);
+
         // Returns the JSON response as an object, or null if the request failed.
-        return $response ? $response->getJson() : null;
+        return $object ? $object : null;
     }
 
 
@@ -81,23 +78,23 @@ class AccessController
         "relatedAccessMediaNumber": <number, optional>
     }
     */
-    public function create(array $jsonBody): ?object
+    public function create(array $body): ?object
     {
-        $response = $this->client->request(
-            $this->authService->getBaseUrl(),
-            'POST',
-            '/accessMedias/insert',
+        $response = $this->authService->getClient()->post(
+            $this->authService->getBaseUrl() . '/accessMedias/insert',  
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'fio-access-token' => $this->authService->getToken()
                 ],
-                'json' => $jsonBody
+                'json' => $body
             ]
         );
 
+        $object = json_decode($response->getBody()->getContents(), false);
+
         // Returns the JSON response as an object, or null if the request failed.
-        return $response ? $response->getJson() : null;
+        return $object ? $object : null;
     }
 
     /**
@@ -123,23 +120,23 @@ class AccessController
         "relatedAccessMediaNumber": <number, optional>
     }
     */
-    public function update(array $jsonBody): ?object
+    public function update(array $body): ?object
     {
-        $response = $this->client->request(
-            $this->authService->getBaseUrl(),
-            'PUT',
-            '/accessMedias/update',
+        $response = $this->authService->getClient()->put(
+            $this->authService->getBaseUrl() . '/accessMedias/update',  // URI relativo
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'fio-access-token' => $this->authService->getToken()
                 ],
-                'json' => $jsonBody
+                'json' => $body
             ]
         );
 
+        $object = json_decode($response->getBody()->getContents(), false);
+
         // Returns the JSON response as an object, or null if the request failed.
-        return $response ? $response->getJson() : null;
+        return $object ? $object : null;
     }
 
 
@@ -151,10 +148,8 @@ class AccessController
      */
     public function delete(string $uuid): ?object
     {
-        $response = $this->client->request(
-            $this->authService->getBaseUrl(),
-            'DELETE',
-            '/accessMedias/delete?uuid=' . $uuid,
+        $response = $this->authService->getClient()->delete(
+            $this->authService->getBaseUrl() . '/accessMedias/delete/?uuid=' . $uuid,
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -163,7 +158,9 @@ class AccessController
             ]
         );
 
+        $object = json_decode($response->getBody()->getContents(), false);
+
         // Returns the JSON response as an object, or null if the request failed.
-        return $response ? $response->getJson() : null;
+        return $object ? $object : null;
     }
 }

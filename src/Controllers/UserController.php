@@ -3,7 +3,6 @@
 namespace Keydom\Controllers;
 
 use Keydom\Auth\AuthService;
-use Keydom\Http\Client;
 
 /**
  * UserController class
@@ -13,7 +12,6 @@ use Keydom\Http\Client;
 class UserController
 {
     private AuthService $authService;
-    private Client $client;
 
     /**
      * Constructor method
@@ -25,7 +23,6 @@ class UserController
     public function __construct(AuthService $authService)
     {
         $this->authService = $authService;
-        $this->client = new Client();
     }
 
 
@@ -39,11 +36,8 @@ class UserController
      */
     public function getByKey(string $uuid): ?object
     {
-        // Makes an HTTP GET request to fetch user information.
-        $response = $this->client->request(
-            $this->authService->getBaseUrl(),
-            'GET',
-            '/users/visitor/getByKey/?uuid=' . $uuid,
+        $response = $this->authService->getClient()->get(
+            $this->authService->getBaseUrl() . '/users/visitor/getByKey/?uuid=' . $uuid,
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -52,10 +46,11 @@ class UserController
             ]
         );
 
-        // Returns the JSON response as an object, or null if the request failed.
-        return $response ? $response->getJson() : null;
-    }
+        $object = json_decode($response->getBody()->getContents(), false);
 
+        // Returns the JSON response as an object, or null if the request failed.
+        return $object ? $object : null;
+    }
 
 
 
@@ -75,23 +70,23 @@ class UserController
         "documentNumber": <string, optional>
     }
     */
-    public function create(array $jsonBody): ?object
+    public function create(array $body): ?object
     {
-        $response = $this->client->request(
-            $this->authService->getBaseUrl(),
-            'POST',
-            '/users/visitor/insert',
+        $response = $this->authService->getClient()->post(
+            $this->authService->getBaseUrl() . '/users/visitor/insert',  // URI relativo
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'fio-access-token' => $this->authService->getToken()
                 ],
-                'json' => $jsonBody
+                'json' => $body
             ]
         );
 
+        $object = json_decode($response->getBody()->getContents(), false);
+
         // Returns the JSON response as an object, or null if the request failed.
-        return $response ? $response->getJson() : null;
+        return $object ? $object : null;
     }
 
     /**
@@ -115,23 +110,23 @@ class UserController
         "documentNumber": <string, optional>
     }
     */
-    public function update(array $jsonBody): ?object
+    public function update(array $body): ?object
     {
-        $response = $this->client->request(
-            $this->authService->getBaseUrl(),
-            'PUT',
-            '/users/visitor/update',
+        $response = $this->authService->getClient()->put(
+            $this->authService->getBaseUrl() . '/users/visitor/update',  // URI relativo
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'fio-access-token' => $this->authService->getToken()
                 ],
-                'json' => $jsonBody
+                'json' => $body
             ]
         );
 
+        $object = json_decode($response->getBody()->getContents(), false);
+
         // Returns the JSON response as an object, or null if the request failed.
-        return $response ? $response->getJson() : null;
+        return $object ? $object : null;
     }
 
 
@@ -143,10 +138,8 @@ class UserController
      */
     public function delete(string $uuid): ?object
     {
-        $response = $this->client->request(
-            $this->authService->getBaseUrl(),
-            'DELETE',
-            '/users/delete?uuid=' . $uuid,
+        $response = $this->authService->getClient()->delete(
+            $this->authService->getBaseUrl() . '/users/delete/?uuid=' . $uuid,
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -155,7 +148,9 @@ class UserController
             ]
         );
 
+        $object = json_decode($response->getBody()->getContents(), false);
+
         // Returns the JSON response as an object, or null if the request failed.
-        return $response ? $response->getJson() : null;
+        return $object ? $object : null;
     }
 }
