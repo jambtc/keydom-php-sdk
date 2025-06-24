@@ -10,7 +10,7 @@ $authService = new \Keydom\AuthService('https://keydom.example.com');
 $authService->authenticate('username', 'password');
 
 // Insert new user
-$userController = new \Keydom\Controllers\UserController($authService);
+$usersController = new \Keydom\Controllers\UsersController($authService);
 
 $jsonBody = [
     "lastName" => "Doe",
@@ -23,5 +23,5 @@ $jsonBody = [
     "documentNumber" => "AG66677CJ"
 ];
 
-$user = $userController->create($jsonBody);
+$user = $usersController->create($jsonBody);
 ```

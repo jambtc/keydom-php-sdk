@@ -5,18 +5,18 @@ namespace Keydom\Controllers;
 use Keydom\Auth\AuthService;
 
 /**
- * AccessController class
+ * VisitsController class
  * 
  * This controller handles Access
  */
-class AccessController
+class VisitsController
 {
     private AuthService $authService;
 
     /**
      * Constructor method
      *
-     * Initializes the AccessController with AuthService and creates a new HTTP client instance.
+     * Initializes the VisitsController with AuthService and creates a new HTTP client instance.
      *
      * @param AuthService $authService The authentication service to handle authorization.
      */
@@ -25,20 +25,19 @@ class AccessController
         $this->authService = $authService;
     }
 
-
     /**
-     * Get Access Information
+     * Get Visit Information
      *
-     * Fetches information about a specific access using its user ID.
+     * Fetches information about a specific visit using its user ID.
      *
-     * @param string $uuid The ID of the access to retrieve information for.
-     * @return object|null Returns an object of access information if successful, or null if the request fails.
+     * @param string $uuid The ID of the visit to retrieve information for.
+     * @return object|null Returns an object of visit information if successful, or null if the request fails.
      */
     public function getByKey(string $uuid): ?object
     {
 
         $response = $this->authService->getClient()->get(
-            $this->authService->getBaseUrl() . '/accessMedias/getByKey/update',  // URI relativo
+            $this->authService->getBaseUrl() . '/visits?getByKey' . $uuid,  // URI relativo
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -54,34 +53,45 @@ class AccessController
     }
 
 
-
-
     /**
-     * Create New Access
+     * Create New Visit
      * 
-     * @return object|null Returns new access information if successful, or null if the request fails.
+     * @return object|null Returns new visit information if successful, or null if the request fails.
      */
     /*
     {
-        "identifier": <string, required, has unique constraint>,
-        "mediaTypeCode": <number, required>,
-        "number": <number, optional, has unique constraint>,
-        "enabled": <boolean, required>,
-        "validityStart": <number, required>,
-        "validityEnd": <number, required>,
-        "validityMode": <number, required>,
-        "antipassbackEnabled": <boolean, required>,
-        "countingEnabled": <boolean, required>,
+        "uuid": <string, optional, has unique constraint>,
         "userUuid": <string, optional>,
-        "profileUuidOrName": <string, optional>,
-        "lifeCycleMode": <number, required>,
-        "relatedAccessMediaNumber": <number, optional>
+        "initialTimestamp": <number, required>,
+        "finalTimestamp": <number, required>,
+        "field1": <string, optional>,
+        "field2": <string, optional>,
+        "field3": <string, optional>,
+        "notes": <string, optional>,
+        "preVisitAccessMediaType": <number, optional>,
+        "preVisitAccessMediaIdentifier": <string, optional>,
+        "preVisitAccessProfileUuid": <string, optional>,
+        "visitFirstAccessMediaType": <number, optional>,
+        "visitFirstAccessMediaIdentifier": <string, optional>,
+        "visitFirstAccessMediaNumber": <number, optional>,
+        "visitFirstProfileUuid": <string, optional>,
+        "visitSecondAccessMediaType": <number, optional>,
+        "visitSecondAccessMediaIdentifier": <string, optional>,
+        "visitSecondAccessMediaNumber": <number, optional>,
+        "visitSecondProfileUuid": <string, optional>,
+        "visitThirdAccessMediaType": <number, optional>,
+        "visitThirdAccessMediaIdentifier": <string, optional>,
+        "visitThirdAccessMediaNumber": <number, optional>,
+        "visitThirdProfileUuid": <string, optional>,
+        "relatedUserUuid": <string, optional>
+        "openVisitNow": <boolean, optional>,
+        "siteId": <number, required>,
     }
     */
     public function create(array $body): ?object
     {
         $response = $this->authService->getClient()->post(
-            $this->authService->getBaseUrl() . '/accessMedias/insert',  
+            $this->authService->getBaseUrl() . '/visits/insert',  
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -98,32 +108,15 @@ class AccessController
     }
 
     /**
-     * update Access
+     * update Visit
      * 
-     * @return object|null Returns Access information if successful, or null if the request fails.
+     * @return object|null Returns Visit information if successful, or null if the request fails.
      */
-    /*
-    {
-        "uuid": <string, required, has unique constraint>,
-        "identifier": <string, required, has unique constraint>,
-        "mediaTypeCode": <number, required>,
-        "number": <number, optional, has unique constraint>,
-        "enabled": <boolean, required>,
-        "validityStart": <number, required>,
-        "validityEnd": <number, required>,
-        "validityMode": <number, required>,
-        "antipassbackEnabled": <boolean, required>,
-        "countingEnabled": <boolean, required>,
-        "userUuid": <string, optional>,
-        "profileUuidOrName": <string, optional>,
-        "lifeCycleMode": <number, required>,
-        "relatedAccessMediaNumber": <number, optional>
-    }
-    */
+    
     public function update(array $body): ?object
     {
         $response = $this->authService->getClient()->put(
-            $this->authService->getBaseUrl() . '/accessMedias/update',  // URI relativo
+            $this->authService->getBaseUrl() . '/visits/update',  // URI relativo
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
@@ -142,14 +135,14 @@ class AccessController
 
 
     /**
-     * Delete Access
+     * Delete Visit
      * 
      * @return object|null Returns boolean, or null if the request fails.
      */
     public function delete(string $uuid): ?object
     {
         $response = $this->authService->getClient()->delete(
-            $this->authService->getBaseUrl() . '/accessMedias/delete/?uuid=' . $uuid,
+            $this->authService->getBaseUrl() . '/visits/delete/?uuid=' . $uuid,
             [
                 'headers' => [
                     'Content-Type' => 'application/json',
